@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.vilas.installedapplibrary.GetInstalledApps;
+
 import java.util.ArrayList;
 
 import model.PackInfo;
@@ -14,10 +16,9 @@ import listeners.OnItemClickListener;
 
 public class InstalledAppAdapter extends RecyclerView.Adapter<InstalledAppViewHolder> {
 
-    private ArrayList<PackInfo> appList;
+    private ArrayList<GetInstalledApps.PackInfo> appList;
     private OnItemClickListener onItemClickListener;
-    private ArrayList<PackInfo> appListFiltered;
-    public InstalledAppAdapter(ArrayList<PackInfo> pInfos, OnItemClickListener onItemClickListener){
+    public InstalledAppAdapter(ArrayList<GetInstalledApps.PackInfo> pInfos, OnItemClickListener onItemClickListener){
         this.appList= pInfos;
         this.onItemClickListener =onItemClickListener;
     }
@@ -31,17 +32,17 @@ public class InstalledAppAdapter extends RecyclerView.Adapter<InstalledAppViewHo
 
     @Override
     public void onBindViewHolder(@NonNull InstalledAppViewHolder viewHolder, int position) {
-        PackInfo pInfo = appList.get(position);
+        GetInstalledApps.PackInfo pInfo = appList.get(position);
         viewHolder.imageView.setImageDrawable(pInfo.getIcon());
         viewHolder.appName.setText(pInfo.getAppName());
         viewHolder.packageName.setText(pInfo.getPackageName());
         viewHolder.versionCode.setText(String.valueOf(pInfo.getVersionCode()));
         viewHolder.versionName.setText(pInfo.getVersionName());
-        if (pInfo.getActivityClassname().equals("")) {
+        if (pInfo.getActivityClassName().equals("")) {
             viewHolder.activityClassName.setVisibility(View.GONE);
         }else{
             viewHolder.activityClassName.setVisibility(View.VISIBLE);
-            viewHolder.activityClassName.setText(pInfo.getActivityClassname());
+            viewHolder.activityClassName.setText(pInfo.getActivityClassName());
         }
     }
 
@@ -50,7 +51,7 @@ public class InstalledAppAdapter extends RecyclerView.Adapter<InstalledAppViewHo
         return appList.size();
     }
 
-    public void setFilter(ArrayList<PackInfo> newList){
+    public void setFilter(ArrayList<GetInstalledApps.PackInfo> newList){
         appList = new ArrayList<>();
         appList.addAll(newList);
         notifyDataSetChanged();

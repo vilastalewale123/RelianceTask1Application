@@ -13,6 +13,8 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.vilas.installedapplibrary.GetInstalledApps;
+
 import java.util.ArrayList;
 
 import data.DataSource;
@@ -22,7 +24,7 @@ import model.PackInfo;
 public class MainActivity extends AppCompatActivity implements OnItemClickListener, SearchView.OnQueryTextListener {
 
     private InstalledAppAdapter adapter;
-    private ArrayList<PackInfo> listOfAppInstalled;
+    private ArrayList<GetInstalledApps.PackInfo> listOfAppInstalled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     public void initialise(){
 
         DataSource dataSource = new DataSource();
-        listOfAppInstalled = dataSource.getPackages(this);
+        listOfAppInstalled = dataSource.getAppInfo(this);
         System.out.println("List of apps installed" + listOfAppInstalled.toString());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     public void onItemClick(int position) {
-        PackInfo item = listOfAppInstalled.get(position);
+        GetInstalledApps.PackInfo item = listOfAppInstalled.get(position);
         Intent launchApp = getPackageManager().getLaunchIntentForPackage(item.getPackageName());
         startActivity(launchApp);
     }
@@ -86,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        ArrayList<PackInfo> filteredList = new ArrayList<>();
-        for (PackInfo app : listOfAppInstalled) {
+        ArrayList<GetInstalledApps.PackInfo> filteredList = new ArrayList<>();
+        for (GetInstalledApps.PackInfo app : listOfAppInstalled) {
             if (app.getAppName().toLowerCase().contains(newText.toLowerCase())) {
                 filteredList.add(app);
             }
