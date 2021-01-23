@@ -7,7 +7,16 @@ import java.util.List;
 
 public class GetInstalledApps {
 
-    public static List<PackageInfo> getInstalledApps(Context context){
+    private static final GetInstalledApps getInstance = new GetInstalledApps();
+
+    public GetInstalledApps(){}
+
+    //Providing global point of access
+    public static GetInstalledApps getSingleTonInstance(){
+        return getInstance;
+    }
+
+    public List<PackageInfo> getInstalledApps(Context context){
         return context.getPackageManager().getInstalledPackages(0);
     }
 }

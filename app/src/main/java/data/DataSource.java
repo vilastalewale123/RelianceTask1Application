@@ -17,7 +17,7 @@ import model.PackInfo;
 public class DataSource {
 
     public ArrayList<PackInfo> getPackages(Context context) {
-        List<PackageInfo> packs = GetInstalledApps.getInstalledApps(context);
+        List<PackageInfo> packs = GetInstalledApps.getSingleTonInstance().getInstalledApps(context);
         ArrayList<PackInfo> apps = getInstalledApps(packs,false, context); /* false = no system packages */
         final int max = apps.size();
         for (int i = 0; i < max; i++) {
