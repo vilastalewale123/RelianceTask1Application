@@ -1,0 +1,3 @@
+include ':installedapplibrary'
+include ':app'
+rootProject.name = "Task1"
