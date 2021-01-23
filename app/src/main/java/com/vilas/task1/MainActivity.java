@@ -17,9 +17,7 @@ import com.vilas.installedapplibrary.GetInstalledApps;
 
 import java.util.ArrayList;
 
-import data.DataSource;
 import listeners.OnItemClickListener;
-import model.PackInfo;
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListener, SearchView.OnQueryTextListener {
 
@@ -35,10 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     }
 
     public void initialise(){
-
-        DataSource dataSource = new DataSource();
-        listOfAppInstalled = dataSource.getAppInfo(this);
-        System.out.println("List of apps installed" + listOfAppInstalled.toString());
+        listOfAppInstalled = GetInstalledApps.getSingleTonInstance().getInstalledApps(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
