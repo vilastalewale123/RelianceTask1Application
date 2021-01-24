@@ -4,8 +4,10 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +24,8 @@ import listeners.OnItemClickListener;
 public class MainActivity extends AppCompatActivity implements OnItemClickListener, SearchView.OnQueryTextListener {
 
     private InstalledAppAdapter adapter;
-    private ArrayList<GetInstalledApps.PackInfo> listOfAppInstalled;
+    private ArrayList<GetInstalledApps.PackInfo> getListOfAppInstalled;
+    private ArrayList<GetInstalledApps.PackInfo> listOfApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +35,25 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         initialise();
     }
 
-    public void initialise(){
-        listOfAppInstalled = GetInstalledApps.getSingleTonInstance().getInstalledApps(this);
+    public void initialise() {
+        setListItems();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new InstalledAppAdapter(listOfAppInstalled, this);
+        adapter = new InstalledAppAdapter(listOfApp, this, this);
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onItemClick(int position) {
-        GetInstalledApps.PackInfo item = listOfAppInstalled.get(position);
+        GetInstalledApps.PackInfo item = listOfApp.get(position);
         Intent launchApp = getPackageManager().getLaunchIntentForPackage(item.getPackageName());
-        startActivity(launchApp);
+        if (launchApp != null) {
+            startActivity(launchApp);
+        } else {
+            Toast.makeText(this, "Not able to launch app", Toast.LENGTH_LONG).show();
+        }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,16 +87,29 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         return false;
     }
 
+    private void setListItems(){
+        getListOfAppInstalled = (GetInstalledApps.getSingleTonInstance().getInstalledApps(this));
+        listOfApp = new ArrayList<>();
+        listOfApp.addAll(getListOfAppInstalled);
+    }
+
     @Override
     public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)) {
+            adapter.setItems();
+            listOfApp = getListOfAppInstalled;
+            return false;
+        }
         ArrayList<GetInstalledApps.PackInfo> filteredList = new ArrayList<>();
-        for (GetInstalledApps.PackInfo app : listOfAppInstalled) {
+        for (GetInstalledApps.PackInfo app : listOfApp) {
             if (app.getAppName().toLowerCase().contains(newText.toLowerCase())) {
                 filteredList.add(app);
             }
         }
 
         adapter.setFilter(filteredList);
+        listOfApp = filteredList;
+
         return false;
     }
 }

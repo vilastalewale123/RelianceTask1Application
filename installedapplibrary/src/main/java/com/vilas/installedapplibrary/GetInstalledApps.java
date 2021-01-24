@@ -10,9 +10,7 @@ import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class GetInstalledApps {
 
@@ -31,11 +29,7 @@ public class GetInstalledApps {
 
     public ArrayList<PackInfo> getInstalledApps(Context context) {
         ArrayList<PackInfo> apps = getPackaInfo(false, context); /* false = no system packages */
-        final int max = apps.size();
-        for (int i = 0; i < max; i++) {
-            apps.get(i);
-        }
-        sortAscendingOrderList(apps);
+        Collections.sort(apps, (lhs, rhs) -> lhs.appName.compareTo(rhs.appName));
         return apps;
     }
 
@@ -63,11 +57,6 @@ public class GetInstalledApps {
             res.add(newInfo);
         }
         return res;
-    }
-
-    public void sortAscendingOrderList(ArrayList<PackInfo> apps) {
-        Set<PackInfo> set = new HashSet<>(apps);
-        Collections.sort(new ArrayList<>(set), (lhs, rhs) -> lhs.appName.compareTo(rhs.appName));
     }
 
     public class PackInfo{

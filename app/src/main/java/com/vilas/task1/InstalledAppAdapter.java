@@ -1,5 +1,6 @@
 package com.vilas.task1;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,11 @@ public class InstalledAppAdapter extends RecyclerView.Adapter<InstalledAppViewHo
 
     private ArrayList<GetInstalledApps.PackInfo> appList;
     private OnItemClickListener onItemClickListener;
-    public InstalledAppAdapter(ArrayList<GetInstalledApps.PackInfo> pInfos, OnItemClickListener onItemClickListener){
+    private Context context;
+    public InstalledAppAdapter(ArrayList<GetInstalledApps.PackInfo> pInfos, OnItemClickListener onItemClickListener,Context context){
         this.appList= pInfos;
         this.onItemClickListener =onItemClickListener;
+        this.context = context;
     }
     @NonNull
     @Override
@@ -54,6 +57,12 @@ public class InstalledAppAdapter extends RecyclerView.Adapter<InstalledAppViewHo
     public void setFilter(ArrayList<GetInstalledApps.PackInfo> newList){
         appList = new ArrayList<>();
         appList.addAll(newList);
+        notifyDataSetChanged();
+    }
+
+    public void setItems(){
+        appList.clear();
+        appList.addAll(GetInstalledApps.getSingleTonInstance().getInstalledApps(context));
         notifyDataSetChanged();
     }
 }
